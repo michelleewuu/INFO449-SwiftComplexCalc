@@ -51,11 +51,15 @@ class Calculator {
     
     // handles functions with array input
     func add(_ args: [Int]) -> Int {
-        var sum = 0
-        for i in 0...(args.count - 1) {
-            sum = sum + args[i]
+        if args.count > 0 {
+            var sum = 0
+            for i in 0...(args.count - 1) {
+                sum = sum + args[i]
+            }
+            return sum
+        } else {
+            return 0
         }
-        return sum
     }
     
     func multiply(_ args: [Int]) -> Int {
@@ -77,23 +81,27 @@ class Calculator {
     }
     
     func avg(_ args: [Int]) -> Int {
-        var sum = 0
-        for i in 0...(args.count - 1) {
-            sum = sum + args[i]
-        }
-        if args.count > 0 {
-            return sum / args.count
-        } else {
+        if args.count == 0 {
             return 0
+        } else {
+            var sum = 0
+            for i in 0...(args.count - 1) {
+                sum = sum + args[i]
+            }
+            return sum / args.count
         }
     }
     
     func mathOp(args: [Int], beg: Int, op: (Int, Int) -> Int) -> Int {
-        var result = beg
-        for i in 0...(args.count - 1) {
-            result = op(result, args[i])
+        if args.count > 0 {
+            var result = beg
+            for i in 0...(args.count - 1) {
+                result = op(result, args[i])
+            }
+            return result
+        } else {
+            return 0
         }
-        return result
     }
     
     // add, subtract functions with Cartesian points (tuples)
@@ -140,7 +148,24 @@ let calc = Calculator()
 //: Keep in mind that writing new tests may reveal ambiguity in the specification above--if that's the case, document the ambiguity, declare what you think *should* happen, and write the test to test for it.
 
 // ===== Your tests go here
+calc.add(lhs: 1, rhs: -4) == -3
+calc.subtract(lhs: -3, rhs: 2) == -5
+calc.multiply(lhs: 2, rhs: -2) == -4
+calc.divide(lhs: 20, rhs: -2) == -10
 
+calc.add([]) == 0
+calc.multiply([]) == 0
+calc.avg([]) == 0
+
+calc.add(lhs: (-2, -1), rhs: (4, 2)) == (2, 1)
+calc.subtract(lhs: (-4, 2), rhs: (-4, 2)) == (0, 0)
+
+calc.add(lhs: ["x": 3, "y": -5], rhs: ["x": 1, "y": 5]) == ["x": 4, "y": 0]
+calc.subtract(lhs: ["x": 1, "y": -3], rhs: ["x": -4, "y": -2]) == ["x": 5, "y": -1]
+
+calc.mathOp(lhs: 2, rhs: 2, op: { ($0 - $1) * ($0 - $1) }) == 0
+calc.mathOp(args: [1, -1, 1, -1, 1], beg: 0, op: { $0 + $1 }) == 1
+calc.mathOp(args: [], beg: 0, op: { $0 - $1 }) == 0
 //: ---
 //: ## Test code block
 //: Do not modify the code in this section
